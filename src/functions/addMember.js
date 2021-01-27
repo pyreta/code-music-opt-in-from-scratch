@@ -5,6 +5,7 @@ const mcApiKey = process.env.MAILCHIMP_API_KEY;
 const listId = process.env.MAILCHIMP_LIST_ID;
 
 exports.handler = async (event, context, callback) => {
+  console.log('in here!!!');
   try {
     const mailchimp = new Mailchimp(mcApiKey);
     return mailchimp.post(`lists/${listId}/members`, {
@@ -18,14 +19,14 @@ exports.handler = async (event, context, callback) => {
         body: JSON.stringify({msg: `Thank you! The email ${res.email_address} has been added to our mailing list.`})
       }
     }).catch(err => {
-      console.log(err.message)
+      console.log('error!', err.message)
       return {
         statusCode: 500,
         body: JSON.stringify({msg: err.message})
       }
     })
   } catch (err) {
-    console.log(err.message)
+    console.log('erorrrror', err.message)
     return {
       statusCode: 500,
       body: JSON.stringify({msg: err.message})
