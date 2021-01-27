@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+// import PropTypes from "prop-types";
 
-function App() {
+const App = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if (email) {
+      fetch(`/.netlify/functions/addMember?email=${email}&name=${name}`)
+        .then(res => res.json().then(data => ({status: res.status, body: data})))
+        .then(obj => {
+          console.log(`obj:`, obj)
+        })
+        .catch(err => console.log(err))
+      setEmail('');
+      setName('');
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        name="name"
+        type="name"
+        placeholder={'Enter Name'}
+        onChange={e =>
+          setName(e.target.value.trim())
+        }
+        value={name}
+        aria-label="Name"
+      />
+      <input
+        name="email"
+        type="email"
+        placeholder={'Enter Email'}
+        onChange={e =>
+          setEmail(e.target.value.trim())
+        }
+        value={email}
+        aria-label="Email Address"
+      />
+      <button type="submit">
+        Send me my free course!
+      </button>
+    </form>
   );
-}
+};
+
+App.propTypes = {
+};
 
 export default App;
